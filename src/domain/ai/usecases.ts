@@ -1,19 +1,11 @@
-import type { AICalculator } from "./ports"
-import type { Meal } from "@/domain/meal/model"
+import { AI_PROVIDER } from "@/app/config"
+import { Meal } from "@/domain/meal/model"
 
-export async function estimateMealWithAI(
-  ai: AICalculator,
-  input: { text: string }
-): Promise<Meal> {
-  const res = await ai.estimateMeal({
-    description: input.text,
-  })
+export async function estimateMeal(text: string): Promise<Pick<Meal, "name" | "calories">> {
+  const res = await AI_PROVIDER.estimateMeal(text)
 
   return {
-    id: crypto.randomUUID(),
     name: res.name,
     calories: res.calories,
-    confidence: res.confidence,
-    createdAt: new Date().toISOString(),
   }
 }
